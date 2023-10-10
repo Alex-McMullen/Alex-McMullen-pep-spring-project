@@ -3,7 +3,9 @@ package com.example.service;
 import com.example.repository.AccountRepository;
 import com.example.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AccountService 
 {
     AccountRepository accountRepository;
@@ -46,5 +48,16 @@ public class AccountService
             return accountRepository.logInAccount(username, password);
         }
         return null;
+    }
+
+    /**
+     * Retrieve an account from the database by its username
+     * 
+     * @param username, the username of the account to be retrieved
+     * @return the retrieved account
+     */
+    public Account getAccountByUsername(String username)
+    {
+        return accountRepository.getAccountByUsername(username);
     }
 }
