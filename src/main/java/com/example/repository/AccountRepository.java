@@ -15,6 +15,15 @@ public interface AccountRepository extends JpaRepository<Account, Long>
      * @param password, the password of the account to be retrieved
      * @return the retrieved account
      */
-    @Query("from Account where username = :userName and password = :password")
+    @Query("from account where username = :userName and password = :password")
     Account logInAccount(@Param("userName") String username, @Param("password") String password);
+
+    /**
+     * Retrieve an account by its username
+     * 
+     * @param username, the username of the account to be retrieved
+     * @return the retrieved account
+     */
+    @Query("from account where username = :userName")
+    Account getAccountByUsername(@Param("userName") String username);
 }
