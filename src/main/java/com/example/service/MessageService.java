@@ -28,12 +28,9 @@ public class MessageService
      */
     public Message persistMessage(Message message)
     {
-        if(messageRepository.getMessageById(message.getPosted_by()) != null)
+        if(message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255)
         {
-            if(message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255)
-            {
-                return messageRepository.save(message);
-            }
+            return messageRepository.save(message);
         }
         return null;
     }

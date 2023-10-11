@@ -60,4 +60,15 @@ public class AccountService
     {
         return accountRepository.getAccountByUsername(username);
     }
+
+    /**
+     * Retrieve an account from the database by its id
+     * 
+     * @param id, the id of the account to be retrieved
+     * @return the retrieved account
+     */
+    public Account getAccountById(int id)
+    {
+        return accountRepository.getAccountById(id);
+    }
 }

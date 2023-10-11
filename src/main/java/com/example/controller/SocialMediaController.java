@@ -45,7 +45,7 @@ public class SocialMediaController
      * @return the registered account
      */
     @PostMapping("register")
-    public ResponseEntity<Account> postAccountCreation(@RequestParam Account account)
+    public ResponseEntity<Account> postAccountCreation(@RequestBody Account account)
     {
         if(account != null)
         {
@@ -74,16 +74,20 @@ public class SocialMediaController
      * @return the account that was logged into
      */
     @PostMapping("login")
-    public ResponseEntity<Account> postAccountLogin(@RequestParam String username, @RequestParam String password)
+    public ResponseEntity<Account> postAccountLogin(@RequestBody Account account)
     {
+        String username = account.getUsername();
+        String password = account.getPassword();
+        Account actualAccount = accountService.getAccountByUsername(username);
+        
         if(accountService.getAccountByUsername(username) != null)
         {
-            return ResponseEntity.status(200).body(accountService.loginAccount(username, password));
+            if(password.equals(actualAccount.getPassword()))
+            {
+                return ResponseEntity.status(200).body(accountService.loginAccount(username, password));
+            }
         }
-        else
-        {
-            return ResponseEntity.status(401).body(null);
-        }
+        return ResponseEntity.status(401).body(null);
     }
 
     /**
@@ -95,9 +99,10 @@ public class SocialMediaController
      * @return the message that was created
      */
     @PostMapping("messages")
-    public ResponseEntity<Message> postMessageCreation(@RequestParam Message message)
+    public ResponseEntity<Message> postMessageCreation(@RequestBody Message message)
     {
-        if(messageService.getMessagesByUser(message.getPosted_by()) != null)
+        Account account = accountService.getAccountById(message.getPosted_by());
+        if(account != null)
         {
             if(message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255)
             {
@@ -146,6 +151,7 @@ public class SocialMediaController
     }
 
     /**
+     * TODO: figure out why empty strings are getting passed everything
      * Patch endpoint to handle requests to update a message
      * Will return 200 status upon successful message update
      * Will return 400 status if the update is not successful for any reason

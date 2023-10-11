@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>
      * @param message_id, the message_id of the message to be deleted
      * @return the number of rows updated
      */
+    @Transactional
     @Modifying
     @Query("delete from Message where message_id = :messageId")
     int deleteMessageById(@Param("messageId") int message_id);
@@ -46,6 +48,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>
      * @param message_id, the id of the message to be updated
      * @return the number of rows updated
      */
+    @Transactional
     @Modifying
     @Query("update Message set message_text = :messageText where message_id = :messageId")
     int updateMessageById(@Param("messageText") String message_text, @Param("messageId") int message_id);

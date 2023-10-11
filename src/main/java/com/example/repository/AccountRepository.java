@@ -28,4 +28,13 @@ public interface AccountRepository extends JpaRepository<Account, Long>
      */
     @Query("from Account where username = :userName")
     Account getAccountByUsername(@Param("userName") String username);
+
+    /**
+     * Retrieve an account by its id
+     * 
+     * @param account_id, the id of the account to be retrieved
+     * @return the retrieved account
+     */
+    @Query("from Account where account_id = :accountId")
+    Account getAccountById(@Param("accountId") int account_id);
 }
