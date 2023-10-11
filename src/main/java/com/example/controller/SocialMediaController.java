@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.entity.Account;
 import com.example.entity.Message;
+import com.example.repository.MessageRepository;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 import org.springframework.http.MediaType;
@@ -27,12 +28,14 @@ public class SocialMediaController
 {
     AccountService accountService;
     MessageService messageService;
+    MessageRepository messageRepository;
 
     @Autowired
-    public SocialMediaController(AccountService accountService, MessageService messageService)
+    public SocialMediaController(AccountService accountService, MessageService messageService, MessageRepository messageRepository)
     {
         this.accountService = accountService;
         this.messageService = messageService;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -161,23 +164,14 @@ public class SocialMediaController
      * @return the number of rows updated
      */
     @PatchMapping("messages/{message_id}")
-    public ResponseEntity<Integer> patchMessageById(@PathVariable int message_id, @RequestBody String message_text)
+    private ResponseEntity<Integer> patchMessageById(@PathVariable Integer message_id, @RequestBody Message message)
     {
-        if(messageService.getMessageById(message_id) != null)
+        if(messageRepository.findById(message_id).isPresent() && message.getMessage_text().length() < 255 && !message.getMessage_text().isEmpty())
         {
-            if(message_text.trim() == null || message_text.trim().isEmpty())
-            {
-                return ResponseEntity.status(400).body(0);
-            }
-            else if(!StringUtils.isNullOrEmpty(message_text.trim()))
-            {
-                if(message_text.length() < 255)
-                {
-                    return ResponseEntity.status(200).body(messageService.updateMessageById(message_text, message_id));
-                }
-            }
+            messageRepository.save(message);
+            return new ResponseEntity<>(1, HttpStatus.OK);
         }
-        return ResponseEntity.status(400).body(0);
+        return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
     }
 
     /**

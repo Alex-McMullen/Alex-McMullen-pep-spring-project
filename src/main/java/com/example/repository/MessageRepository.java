@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long>
+public interface MessageRepository extends JpaRepository<Message, Integer>
 {
     /**
      * Retrieve all messages from the database
