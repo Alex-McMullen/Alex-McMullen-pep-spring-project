@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface MessageRepository extends JpaRepository<Message, Long>
 {
     /**
@@ -15,7 +17,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>
      * 
      * @return a list of all messages in the database
      */
-    @Query("from message")
+    @Query("from Message")
     List<Message> getAllMessages();
 
     /**
@@ -24,7 +26,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>
      * @param message_id, the message_id of the message to be retrieved
      * @return the message that is being retrieved
      */
-    @Query("from message where message_id = :messageId")
+    @Query("from Message where message_id = :messageId")
     Message getMessageById(@Param("messageId") int message_id);
 
     /**
@@ -34,7 +36,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>
      * @return the number of rows updated
      */
     @Modifying
-    @Query("delete from message where message_id = :messageId")
+    @Query("delete from Message where message_id = :messageId")
     int deleteMessageById(@Param("messageId") int message_id);
 
     /**
@@ -45,7 +47,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>
      * @return the number of rows updated
      */
     @Modifying
-    @Query("update message set message_text = :messageText where message_id = :messageId")
+    @Query("update Message set message_text = :messageText where message_id = :messageId")
     int updateMessageById(@Param("messageText") String message_text, @Param("messageId") int message_id);
 
     /**
@@ -54,6 +56,6 @@ public interface MessageRepository extends JpaRepository<Message, Long>
      * @param posted_by, the id of the user who posted the messages
      * @return a list of all messages posted by a particular user
      */
-    @Query("from message where posted_by = :postedBy")
+    @Query("from Message where posted_by = :postedBy")
     List<Message> getMessagesByUser(@Param("postedBy") int posted_by);
 }

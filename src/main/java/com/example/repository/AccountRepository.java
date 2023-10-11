@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface AccountRepository extends JpaRepository<Account, Long>
 {
     /**
@@ -15,7 +17,7 @@ public interface AccountRepository extends JpaRepository<Account, Long>
      * @param password, the password of the account to be retrieved
      * @return the retrieved account
      */
-    @Query("from account where username = :userName and password = :password")
+    @Query("from Account where username = :userName and password = :password")
     Account logInAccount(@Param("userName") String username, @Param("password") String password);
 
     /**
@@ -24,6 +26,6 @@ public interface AccountRepository extends JpaRepository<Account, Long>
      * @param username, the username of the account to be retrieved
      * @return the retrieved account
      */
-    @Query("from account where username = :userName")
+    @Query("from Account where username = :userName")
     Account getAccountByUsername(@Param("userName") String username);
 }
