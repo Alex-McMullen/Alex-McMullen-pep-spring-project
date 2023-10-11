@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.apache.logging.log4j.util.Strings;
+import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -145,20 +147,31 @@ public class SocialMediaController
 
     /**
      * Patch endpoint to handle requests to update a message
-     * Will return 200 upon successful message update
+     * Will return 200 status upon successful message update
+     * Will return 400 status if the update is not successful for any reason
      * 
      * @param message_id, the id of the message to be updated
      * @param message_text, the new message text
      * @return the number of rows updated
      */
     @PatchMapping("messages/{message_id}")
-    public int patchMessageById(@PathVariable int message_id, @RequestBody String message_text)
+    public ResponseEntity<Integer> patchMessageById(@PathVariable int message_id, @RequestBody String message_text)
     {
-        if(message_text.length() > 0 && message_text.length() < 255)
+        if(messageService.getMessageById(message_id) != null)
         {
-            return messageService.updateMessageById(message_text, message_id);
+            if(message_text.trim() == null || message_text.trim().isEmpty())
+            {
+                return ResponseEntity.status(400).body(0);
+            }
+            else if(!StringUtils.isNullOrEmpty(message_text.trim()))
+            {
+                if(message_text.length() < 255)
+                {
+                    return ResponseEntity.status(200).body(messageService.updateMessageById(message_text, message_id));
+                }
+            }
         }
-        return 0;
+        return ResponseEntity.status(400).body(0);
     }
 
     /**

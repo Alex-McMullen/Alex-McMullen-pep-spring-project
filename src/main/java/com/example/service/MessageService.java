@@ -2,6 +2,8 @@ package com.example.service;
 
 import com.example.repository.MessageRepository;
 import com.example.entity.Message;
+
+import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,9 +83,15 @@ public class MessageService
     {
         if(messageRepository.getMessageById(id) != null)
         {
-            if(messageText.length() > 0 && messageText.length() < 255)
+            if(!StringUtils.isNullOrEmpty(messageText))
             {
-                return messageRepository.updateMessageById(messageText, id);
+                if(!(messageText.isEmpty()) && messageText.length() < 255)
+                {
+                    Message message = messageRepository.getMessageById(id);
+                    message.setMessage_text(messageText);
+                    messageRepository.save(message);
+                    return 1;
+                }
             }
         }
         return 0;
